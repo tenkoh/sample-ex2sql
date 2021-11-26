@@ -27,12 +27,6 @@ func (pc *PostCreate) SetTitle(s string) *PostCreate {
 	return pc
 }
 
-// SetBody sets the "body" field.
-func (pc *PostCreate) SetBody(s string) *PostCreate {
-	pc.mutation.SetBody(s)
-	return pc
-}
-
 // SetImgPath sets the "img_path" field.
 func (pc *PostCreate) SetImgPath(s string) *PostCreate {
 	pc.mutation.SetImgPath(s)
@@ -168,9 +162,6 @@ func (pc *PostCreate) check() error {
 	if _, ok := pc.mutation.Title(); !ok {
 		return &ValidationError{Name: "title", err: errors.New(`ent: missing required field "title"`)}
 	}
-	if _, ok := pc.mutation.Body(); !ok {
-		return &ValidationError{Name: "body", err: errors.New(`ent: missing required field "body"`)}
-	}
 	if _, ok := pc.mutation.ImgPath(); !ok {
 		return &ValidationError{Name: "img_path", err: errors.New(`ent: missing required field "img_path"`)}
 	}
@@ -214,14 +205,6 @@ func (pc *PostCreate) createSpec() (*Post, *sqlgraph.CreateSpec) {
 			Column: post.FieldTitle,
 		})
 		_node.Title = value
-	}
-	if value, ok := pc.mutation.Body(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: post.FieldBody,
-		})
-		_node.Body = value
 	}
 	if value, ok := pc.mutation.ImgPath(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{

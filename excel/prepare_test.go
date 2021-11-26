@@ -10,7 +10,7 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
-func Test_Prepare(t *testing.T) {
+func TestMain(m *testing.M) {
 	f := excelize.NewFile()
 	imgTypes := []string{"png", "jpg", "gif"}
 	f.SetColWidth("Sheet1", "B", "B", 50)
@@ -23,8 +23,9 @@ func Test_Prepare(t *testing.T) {
 
 		c, _ = excelize.CoordinatesToCellName(2, r)
 		if err := f.AddPicture("Sheet1", c, fmt.Sprintf("../testdata/static/gopher.%s", tt), ""); err != nil {
-			t.Error(err)
+			panic(err)
 		}
 	}
 	f.SaveAs("../testdata/gophers.xlsx")
+	m.Run()
 }

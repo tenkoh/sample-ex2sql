@@ -16,7 +16,6 @@ type Post struct {
 func (Post) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("title"),
-		field.String("body"),
 		field.String("img_path"),
 		field.Time("created_at").Default(util.LocalNow),
 		field.Time("updated_at").Default(util.LocalNow),

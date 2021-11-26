@@ -34,12 +34,6 @@ func (pu *PostUpdate) SetTitle(s string) *PostUpdate {
 	return pu
 }
 
-// SetBody sets the "body" field.
-func (pu *PostUpdate) SetBody(s string) *PostUpdate {
-	pu.mutation.SetBody(s)
-	return pu
-}
-
 // SetImgPath sets the "img_path" field.
 func (pu *PostUpdate) SetImgPath(s string) *PostUpdate {
 	pu.mutation.SetImgPath(s)
@@ -194,13 +188,6 @@ func (pu *PostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: post.FieldTitle,
 		})
 	}
-	if value, ok := pu.mutation.Body(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: post.FieldBody,
-		})
-	}
 	if value, ok := pu.mutation.ImgPath(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -298,12 +285,6 @@ type PostUpdateOne struct {
 // SetTitle sets the "title" field.
 func (puo *PostUpdateOne) SetTitle(s string) *PostUpdateOne {
 	puo.mutation.SetTitle(s)
-	return puo
-}
-
-// SetBody sets the "body" field.
-func (puo *PostUpdateOne) SetBody(s string) *PostUpdateOne {
-	puo.mutation.SetBody(s)
 	return puo
 }
 
@@ -483,13 +464,6 @@ func (puo *PostUpdateOne) sqlSave(ctx context.Context) (_node *Post, err error) 
 			Type:   field.TypeString,
 			Value:  value,
 			Column: post.FieldTitle,
-		})
-	}
-	if value, ok := puo.mutation.Body(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: post.FieldBody,
 		})
 	}
 	if value, ok := puo.mutation.ImgPath(); ok {

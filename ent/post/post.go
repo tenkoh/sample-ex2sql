@@ -13,8 +13,6 @@ const (
 	FieldID = "id"
 	// FieldTitle holds the string denoting the title field in the database.
 	FieldTitle = "title"
-	// FieldBody holds the string denoting the body field in the database.
-	FieldBody = "body"
 	// FieldImgPath holds the string denoting the img_path field in the database.
 	FieldImgPath = "img_path"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
@@ -36,7 +34,6 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldTitle,
-	FieldBody,
 	FieldImgPath,
 	FieldCreatedAt,
 	FieldUpdatedAt,

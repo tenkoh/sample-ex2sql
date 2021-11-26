@@ -18,8 +18,6 @@ type Post struct {
 	ID int `json:"id,omitempty"`
 	// Title holds the value of the "title" field.
 	Title string `json:"title,omitempty"`
-	// Body holds the value of the "body" field.
-	Body string `json:"body,omitempty"`
 	// ImgPath holds the value of the "img_path" field.
 	ImgPath string `json:"img_path,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
@@ -56,7 +54,7 @@ func (*Post) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case post.FieldID:
 			values[i] = new(sql.NullInt64)
-		case post.FieldTitle, post.FieldBody, post.FieldImgPath:
+		case post.FieldTitle, post.FieldImgPath:
 			values[i] = new(sql.NullString)
 		case post.FieldCreatedAt, post.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -86,12 +84,6 @@ func (po *Post) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field title", values[i])
 			} else if value.Valid {
 				po.Title = value.String
-			}
-		case post.FieldBody:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field body", values[i])
-			} else if value.Valid {
-				po.Body = value.String
 			}
 		case post.FieldImgPath:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -146,8 +138,6 @@ func (po *Post) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v", po.ID))
 	builder.WriteString(", title=")
 	builder.WriteString(po.Title)
-	builder.WriteString(", body=")
-	builder.WriteString(po.Body)
 	builder.WriteString(", img_path=")
 	builder.WriteString(po.ImgPath)
 	builder.WriteString(", created_at=")

@@ -528,7 +528,6 @@ type PostMutation struct {
 	typ             string
 	id              *int
 	title           *string
-	body            *string
 	img_path        *string
 	created_at      *time.Time
 	updated_at      *time.Time
@@ -654,42 +653,6 @@ func (m *PostMutation) OldTitle(ctx context.Context) (v string, err error) {
 // ResetTitle resets all changes to the "title" field.
 func (m *PostMutation) ResetTitle() {
 	m.title = nil
-}
-
-// SetBody sets the "body" field.
-func (m *PostMutation) SetBody(s string) {
-	m.body = &s
-}
-
-// Body returns the value of the "body" field in the mutation.
-func (m *PostMutation) Body() (r string, exists bool) {
-	v := m.body
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldBody returns the old "body" field's value of the Post entity.
-// If the Post object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PostMutation) OldBody(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldBody is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldBody requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldBody: %w", err)
-	}
-	return oldValue.Body, nil
-}
-
-// ResetBody resets all changes to the "body" field.
-func (m *PostMutation) ResetBody() {
-	m.body = nil
 }
 
 // SetImgPath sets the "img_path" field.
@@ -873,12 +836,9 @@ func (m *PostMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PostMutation) Fields() []string {
-	fields := make([]string, 0, 5)
+	fields := make([]string, 0, 4)
 	if m.title != nil {
 		fields = append(fields, post.FieldTitle)
-	}
-	if m.body != nil {
-		fields = append(fields, post.FieldBody)
 	}
 	if m.img_path != nil {
 		fields = append(fields, post.FieldImgPath)
@@ -899,8 +859,6 @@ func (m *PostMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case post.FieldTitle:
 		return m.Title()
-	case post.FieldBody:
-		return m.Body()
 	case post.FieldImgPath:
 		return m.ImgPath()
 	case post.FieldCreatedAt:
@@ -918,8 +876,6 @@ func (m *PostMutation) OldField(ctx context.Context, name string) (ent.Value, er
 	switch name {
 	case post.FieldTitle:
 		return m.OldTitle(ctx)
-	case post.FieldBody:
-		return m.OldBody(ctx)
 	case post.FieldImgPath:
 		return m.OldImgPath(ctx)
 	case post.FieldCreatedAt:
@@ -941,13 +897,6 @@ func (m *PostMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetTitle(v)
-		return nil
-	case post.FieldBody:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetBody(v)
 		return nil
 	case post.FieldImgPath:
 		v, ok := value.(string)
@@ -1021,9 +970,6 @@ func (m *PostMutation) ResetField(name string) error {
 	switch name {
 	case post.FieldTitle:
 		m.ResetTitle()
-		return nil
-	case post.FieldBody:
-		m.ResetBody()
 		return nil
 	case post.FieldImgPath:
 		m.ResetImgPath()
