@@ -2,9 +2,13 @@ package main
 
 import (
 	"context"
+	"io"
 	"log"
+	"net/http"
 	"os"
+	"text/template"
 
+	"github.com/labstack/echo/v4"
 	"github.com/tenkoh/exsql/db"
 	"github.com/tenkoh/exsql/excel"
 )
@@ -17,6 +21,27 @@ func init() {
 			panic(err)
 		}
 	}
+}
+
+type Template struct {
+	templates *template.Template
+}
+
+func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
+	return t.templates.ExecuteTemplate(w, name, data)
+}
+
+func showPosts(c echo.Context) error {
+	client, err := db.Connect()
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+	defer client.Close()
+	posts, err := client.Post.Query().All(c.Request().Context())
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+	return c.Render(http.StatusOK, "posts", posts)
 }
 
 func main() {
@@ -47,7 +72,7 @@ func main() {
 		if err != nil {
 			continue
 		}
-		imgPath, err := r.SaveImage(i, 1, imgDir, nil)
+		imgPath, err := r.SaveImage(i, 2, imgDir, nil)
 		if err != nil {
 			continue
 		}
@@ -60,4 +85,14 @@ func main() {
 			continue
 		}
 	}
+
+	// show data
+	e := echo.New()
+	t := &Template{
+		templates: template.Must(template.ParseGlob("view/*.html")),
+	}
+	e.Renderer = t
+	e.Static("/testdata", "testdata")
+	e.GET("/posts", showPosts)
+	e.Logger.Fatal(e.Start(":1323"))
 }

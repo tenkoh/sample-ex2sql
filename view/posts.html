@@ -1,0 +1,8 @@
+{{define "posts"}}
+{{range $index, $post := .}}
+<h2>{{.Title}}</h2>
+<div>
+    <img src="/{{.ImgPath}}">
+</div>
+{{end}}
+{{end}}
