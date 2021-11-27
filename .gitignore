@@ -17,3 +17,6 @@ testdata/tmp/
 
 # binary
 exsql
+
+# Unnecessary files
+.DS_Store
